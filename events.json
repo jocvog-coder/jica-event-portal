@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-19T05:40:38.704593",
+  "last_updated": "2026-03-19T05:42:06.835838",
   "total_events": 2,
   "events": [
     {
@@ -12,7 +12,7 @@
       "category": "networking",
       "source_url": "https://facebook.com/jica-tokyo-ob",
       "source_name": "JICA東京支部 OB・OG会",
-      "collected_date": "2026-03-19T05:40:38.704365"
+      "collected_date": "2026-03-19T05:42:06.835505"
     },
     {
       "id": 2,
@@ -24,7 +24,7 @@
       "category": "reunion",
       "source_url": "https://facebook.com/jica-osaka-ob",
       "source_name": "JICA大阪支部 OB・OG会",
-      "collected_date": "2026-03-19T05:40:38.704410"
+      "collected_date": "2026-03-19T05:42:06.835583"
     }
   ]
 }
