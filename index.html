@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JICA海外協力隊 イベント情報ポータル</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .last-updated {
+            text-align: right;
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #ddd;
+            background: white;
+            color: #333;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-btn.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .calendar-wrapper {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .month-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+        }
+
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .calendar th {
+            background: #f9f9f9;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .calendar td {
+            border: 1px solid #eee;
+            padding: 0.75rem;
+            height: 120px;
+            vertical-align: top;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar td:hover {
+            background: #f9f9f9;
+        }
+
+        .calendar td.other-month {
+            background: #f5f5f5;
+            color: #ccc;
+        }
+
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .event-badge {
+            font-size: 11px;
+            padding: 0.25rem 0.5rem;
+            margin-bottom: 0.3rem;
+            border-radius: 3px;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .event-badge:hover {
+            transform: scale(1.05);
+            font-weight: bold;
+        }
+
+        .badge-networking {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 3px solid #1976d2;
+        }
+
+        .badge-reunion {
+            background: #f3e5f5;
+            color: #7b1fa2;
+            border-left: 3px solid #7b1fa2;
+        }
+
+        .badge-other {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 3px solid #388e3c;
+        }
+
+        .events-section {
+            margin-top: 2rem;
+        }
+
+        .events-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 4px solid #667eea;
+        }
+
+        .event-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .event-card.networking {
+            border-left-color: #1976d2;
+        }
+
+        .event-card.reunion {
+            border-left-color: #7b1fa2;
+        }
+
+        .event-card.other {
+            border-left-color: #388e3c;
+        }
+
+        .event-category {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-category.networking {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .event-category.reunion {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .event-category.other {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .event-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .event-detail {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-description {
+            font-size: 14px;
+            color: #666;
+            margin-top: 1rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-source {
+            font-size: 12px;
+            color: #999;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #667eea;
+        }
+
+        .sources-info {
+            background: #f0f4ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .sources-info h3 {
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+
+        .sources-info ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .sources-info li:before {
+            content: "• ";
+            color: #667eea;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .calendar td {
+                height: 100px;
+                font-size: 12px;
+                padding: 0.5rem;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>JICA海外協力隊 イベント情報ポータル</h1>
+            <p>経験者のネットワーキング・交流イベントを自動集約</p>
+        </div>
+
+        <div class="last-updated" id="lastUpdated"></div>
+
+        <div class="controls">
+            <div class="category-filter">
+                <button class="filter-btn active" onclick="filterByCategory('all')">すべて</button>
+                <button class="filter-btn" onclick="filterByCategory('networking')">ネットワーキング</button>
+                <button class="filter-btn" onclick="filterByCategory('reunion')">同窓会</button>
+                <button class="filter-btn" onclick="filterByCategory('other')">その他</button>
+            </div>
+        </div>
+
+        <div class="calendar-wrapper">
+            <div class="month-navigation">
+                <button class="nav-btn" onclick="previousMonth()">← 前月</button>
+                <div class="month-title" id="monthTitle"></div>
+                <button class="nav-btn" onclick="nextMonth()">次月 →</button>
+            </div>
+            <table class="calendar">
+                <thead>
+                    <tr>
+                        <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
+                    </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+            </table>
+        </div>
+
+        <div class="events-section">
+            <div class="events-title">表示中のイベント</div>
+            <div id="eventsList" class="events-grid">
+                <div class="loading">イベント情報を読み込み中...</div>
+            </div>
+        </div>
+
+        <div class="sources-info">
+            <h3>データ取得元</h3>
+            <ul>
+                <li>JICA公式サイト (jica.go.jp)</li>
+                <li>JOCA（日本海外協力隊協会）</li>
+                <li>各地域のOB・OG会</li>
+                <li>その他国際協力関連イベント</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let allEvents = [];
+        let currentFilter = 'all';
+        let currentDate = new Date();
+
+        // JSONファイルからイベント情報を読み込む
+        async function loadEvents() {
+            try {
+                const response = await fetch('events.json');
+                const data = await response.json();
+                allEvents = data.events || [];
+                
+                // 最終更新時刻を表示
+                const lastUpdated = new Date(data.last_updated);
+                document.getElementById('lastUpdated').textContent = 
+                    `最終更新: ${lastUpdated.toLocaleString('ja-JP')}`;
+                
+                renderCalendar();
+                renderEventsList();
+            } catch (error) {
+                console.error('イベント情報の読み込みエラー:', error);
+                document.getElementById('eventsList').innerHTML = 
+                    '<div class="empty-state">イベント情報の読み込みに失敗しました</div>';
+            }
+        }
+
+        function getEventsForDate(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return allEvents.filter(e => {
+                const matchesCategory = currentFilter === 'all' || e.category === currentFilter;
+                return e.date === dateStr && matchesCategory;
+            });
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('monthTitle').textContent = 
+                currentDate.toLocaleString('ja-JP', { year: 'numeric', month: 'long' });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            let html = '';
+
+            // 前月
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                html += `<td class="other-month"><div class="day-number">${day}</div></td>`;
+            }
+
+            // 当月
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const dayEvents = getEventsForDate(date);
+
+                html += '<td>';
+                html += `<div class="day-number">${day}</div>`;
+
+                dayEvents.forEach(event => {
+                    const categoryClass = `badge-${event.category}`;
+                    html += `<div class="event-badge ${categoryClass}" onclick="viewEvent('${event.id}')">${event.title}</div>`;
+                });
+
+                html += '</td>';
+            }
+
+            // 翌月
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            for (let day = 1; day <= totalCells - firstDay - daysInMonth; day++) {
+                html += `<td class="other-month"><div class="day-number">${day}</div></td>`;
+            }
+
+            document.getElementById('calendarBody').innerHTML = html;
+        }
+
+        function renderEventsList() {
+            const filteredEvents = currentFilter === 'all'
+                ? allEvents
+                : allEvents.filter(e => e.category === currentFilter);
+
+            const sortedEvents = filteredEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (sortedEvents.length === 0) {
+                document.getElementById('eventsList').innerHTML = 
+                    '<div class="empty-state">イベント情報がありません</div>';
+                return;
+            }
+
+            const html = sortedEvents.map(event => {
+                const eventDate = new Date(event.date);
+                const dateStr = eventDate.toLocaleDateString('ja-JP', 
+                    { year: 'numeric', month: 'long', day: 'numeric' });
+
+                return `
+                    <div class="event-card ${event.category}" onclick="viewEvent('${event.id}')">
+                        <span class="event-category ${event.category}">${getCategoryLabel(event.category)}</span>
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-detail">📅 ${dateStr}</div>
+                        <div class="event-detail">🕐 ${event.time || '時刻未定'}</div>
+                        <div class="event-detail">📍 ${event.location}</div>
+                        <div class="event-description">${event.description}</div>
+                        <div class="event-source">出典: ${event.source_name}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('eventsList').innerHTML = html;
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'networking': 'ネットワーキング',
+                'reunion': '同窓会',
+                'other': 'その他'
+            };
+            return labels[category] || category;
+        }
+
+        function filterByCategory(category) {
+            currentFilter = category;
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderCalendar();
+            renderEventsList();
+        }
+
+        function previousMonth() {
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function viewEvent(eventId) {
+            const event = allEvents.find(e => e.id == eventId);
+            if (event) {
+                alert(`${event.title}\n\n${event.date}\n${event.time}\n${event.location}`);
+                // 実際には、詳細ページへ遷移します
+            }
+        }
+
+        // ページ読み込み時にイベント情報を読み込む
+        loadEvents();
+    </script>
+</body>
+</html>
