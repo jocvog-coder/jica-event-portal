@@ -1,30 +1,30 @@
 {
-  "last_updated": "2026-05-25T04:27:01.022700",
+  "last_updated": "2026-05-26T04:13:13.266188",
   "total_events": 2,
   "events": [
     {
       "id": 1,
       "title": "東京支部 定例会",
-      "date": "2026-06-01",
+      "date": "2026-06-02",
       "time": "18:30～20:30",
       "location": "東京都渋谷区",
       "description": "協力隊経験者の交流会です",
       "category": "networking",
       "source_url": "https://facebook.com/jica-tokyo-ob",
       "source_name": "JICA東京支部 OB・OG会",
-      "collected_date": "2026-05-25T04:27:01.022569"
+      "collected_date": "2026-05-26T04:13:13.266017"
     },
     {
       "id": 2,
       "title": "大阪支部 同期会",
-      "date": "2026-06-08",
+      "date": "2026-06-09",
       "time": "19:00～21:00",
       "location": "大阪府大阪市",
       "description": "同期生の懇親会",
       "category": "reunion",
       "source_url": "https://facebook.com/jica-osaka-ob",
       "source_name": "JICA大阪支部 OB・OG会",
-      "collected_date": "2026-05-25T04:27:01.022610"
+      "collected_date": "2026-05-26T04:13:13.266063"
     }
   ]
 }
